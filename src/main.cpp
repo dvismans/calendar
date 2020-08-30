@@ -13,9 +13,12 @@ const char* password = "turtleturtle";
 const int httpsPort = 443;
 const char* fp_rawcontent     = "cc aa 48 48 66 46 0e 91 53 2c 9c 7c 23 2a b1 74 4d 29 9d 33";
 const char* host_rawcontent   = "raw.githubusercontent.com";
-const char* path_rawcontent   = "/ZinggJM/GxEPD2/master/extras/bitmaps/";
-const char* file_name   = "logo200x200.bmp";
+//const char* path_rawcontent   = "/ZinggJM/GxEPD2/master/extras/bitmaps/";
+//const char* file_name   = "logo200x200.bmp";
 
+//https://raw.githubusercontent.com/dvismans/calendar/master/bmp/logo880x528.bmp
+const char* path_rawcontent   = "/dvismans/calendar/master/bmp/";
+const char* file_name   = "logo880x528.bmp";
 
 void downloadingMessage();
 void helloWorld();
