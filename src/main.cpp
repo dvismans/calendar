@@ -18,7 +18,7 @@ const char* file_name   = "logo200x200.bmp";
 
 //https://raw.githubusercontent.com/dvismans/calendar/master/bmp/test2.bmp
 //const char* path_rawcontent   = "/dvismans/calendar/master/bmp/";
-//const char* file_name   = "logo880x528-2.bmp";
+//const char* file_name   = "logo880x528-3.bmp";
 
 void downloadingMessage();
 void helloWorld();
@@ -67,11 +67,11 @@ void setup()
   Serial.println("Running showBitmapFrom_HTTPS...");
   showBitmapFrom_HTTPS(host_rawcontent, path_rawcontent, file_name, fp_rawcontent, 0, 0, false);
 
-  Serial.println("Running helloWorld...");
-  helloWorld();
+  //Serial.println("Running helloWorld...");
+  //helloWorld();
 
-  Serial.println("Running downloadingMessage...");
-  downloadingMessage();
+  //Serial.println("Running downloadingMessage...");
+  //downloadingMessage();
   //display.powerOff();
   //deepSleepTest();
   Serial.println("Done.");
@@ -123,8 +123,8 @@ void loop(void)
 {
 }
 
-static const uint16_t input_buffer_pixels = 640; // may affect performance
-static const uint16_t max_row_width = 640; // for up to 7.5" display
+static const uint16_t input_buffer_pixels = 880; // may affect performance
+static const uint16_t max_row_width = 880; // for up to 7.5" display
 static const uint16_t max_palette_pixels = 256; // for depth <= 8
 uint8_t input_buffer[3 * input_buffer_pixels]; // up to depth 24
 uint8_t output_row_mono_buffer[max_row_width / 8]; // buffer for at least one row of b/w bits
@@ -148,20 +148,6 @@ void showBitmapFrom_HTTPS(const char* host, const char* path, const char* filena
     Serial.println("connection failed");
     return;
   }
-#if defined (ESP8266)
-  if (fingerprint)
-  {
-    if (client.verify(fingerprint, host))
-    {
-      Serial.println("certificate matches");
-    }
-    else
-    {
-      Serial.println("certificate doesn't match");
-      return;
-    }
-  }
-#endif
   Serial.print("requesting URL: ");
   Serial.println(String("https://") + host + path + filename);
   client.print(String("GET ") + path + filename + " HTTP/1.1\r\n" +
@@ -188,8 +174,14 @@ void showBitmapFrom_HTTPS(const char* host, const char* path, const char* filena
   }
   if (!connection_ok) return;
   // Parse BMP header
-  if (read16(client) == 0x4D42) // BMP signature
+  uint32_t bmp_sig = read16(client);
+  Serial.println("Read header:");
+  Serial.println(bmp_sig);
+
+  if (bmp_sig == 0x4D42) // BMP signature
   {
+    Serial.println("bmp signature in header");
+
     uint32_t fileSize = read32(client);
     uint32_t creatorBytes = read32(client);
     uint32_t imageOffset = read32(client); // Start of image data
@@ -221,7 +213,7 @@ void showBitmapFrom_HTTPS(const char* host, const char* path, const char* filena
       uint16_t h = height;
       if ((x + w - 1) >= display.width())  w = display.width()  - x;
       if ((y + h - 1) >= display.height()) h = display.height() - y;
-      if (w < max_row_width) // handle with direct drawing
+      if (w <= max_row_width) // handle with direct drawing
       {
         valid = true;
         uint8_t bitmask = 0xFF;
@@ -246,13 +238,13 @@ void showBitmapFrom_HTTPS(const char* host, const char* path, const char* filena
             mono_palette_buffer[pn / 8] |= whitish << pn % 8;
             if (0 == pn % 8) color_palette_buffer[pn / 8] = 0;
             color_palette_buffer[pn / 8] |= colored << pn % 8;
-            //Serial.print("0x00"); Serial.print(red, HEX); Serial.print(green, HEX); Serial.print(blue, HEX);
-            //Serial.print(" : "); Serial.print(whitish); Serial.print(", "); Serial.println(colored);
+            Serial.print("0x00"); Serial.print(red, HEX); Serial.print(green, HEX); Serial.print(blue, HEX);
+            Serial.print(" : "); Serial.print(whitish); Serial.print(", "); Serial.println(colored);
           }
         }
         display.writeScreenBuffer();
         uint32_t rowPosition = flip ? imageOffset + (height - h) * rowSize : imageOffset;
-        //Serial.print("skip "); Serial.println(rowPosition - bytes_read);
+        Serial.print("skip "); Serial.println(rowPosition - bytes_read);
         bytes_read += skip(client, rowPosition - bytes_read);
         for (uint16_t row = 0; row < h; row++, rowPosition += rowSize) // for each line
         {
@@ -371,8 +363,14 @@ void showBitmapFrom_HTTPS(const char* host, const char* path, const char* filena
         Serial.print("downloaded in "); Serial.print(millis() - startTime); Serial.println(" ms");
         Serial.print("bytes read "); Serial.println(bytes_read);
         display.refresh();
+      } else {
+        Serial.println("w NOT < than max_row_width");
+        Serial.println(w);
+        Serial.println(max_row_width);
       }
     }
+  } else {
+        Serial.println("bmp signature NOT in header");
   }
   if (!valid)
   {
