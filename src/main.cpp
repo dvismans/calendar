@@ -19,7 +19,7 @@ const char* host_rawcontent   = "raw.githubusercontent.com";
 //https://raw.githubusercontent.com/dvismans/calendar/master/bmp/test2.bmp
 const char* path_rawcontent   = "/dvismans/calendar/master/bmp/";
 //const char* file_name   = "logo880x528-3.bmp";
-const char* file_name   = "logo200x200-saved2.bmp";
+const char* file_name   = "logo200x200-pass.bmp";
 
 void downloadingMessage();
 void helloWorld();
