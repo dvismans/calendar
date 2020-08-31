@@ -8,8 +8,8 @@ GxEPD2_3C<GxEPD2_750c_Z90, GxEPD2_750c_Z90::HEIGHT / 2> display(GxEPD2_750c_Z90(
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 
-const char* ssid     = "VelopGast";
-const char* password = "turtlegast";
+const char* ssid     = "Velop";
+const char* password = "turtleturtle";
 const int httpsPort = 443;
 const char* fp_rawcontent     = "cc aa 48 48 66 46 0e 91 53 2c 9c 7c 23 2a b1 74 4d 29 9d 33";
 const char* host_rawcontent   = "raw.githubusercontent.com";
@@ -18,7 +18,7 @@ const char* host_rawcontent   = "raw.githubusercontent.com";
 
 //https://raw.githubusercontent.com/dvismans/calendar/master/bmp/test2.bmp
 const char* path_rawcontent   = "/dvismans/calendar/master/bmp/";
-const char* file_name   = "logo880x528-3.bmp";
+const char* file_name   = "lenna.bmp";
 //const char* file_name   = "logo200x200-pass.bmp";
 
 void downloadingMessage();
