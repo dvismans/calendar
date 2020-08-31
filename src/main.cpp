@@ -8,8 +8,8 @@ GxEPD2_3C<GxEPD2_750c_Z90, GxEPD2_750c_Z90::HEIGHT / 2> display(GxEPD2_750c_Z90(
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 
-const char* ssid     = "Velop";
-const char* password = "turtleturtle";
+const char* ssid     = "VelopGast";
+const char* password = "turtlegast";
 const int httpsPort = 443;
 const char* fp_rawcontent     = "cc aa 48 48 66 46 0e 91 53 2c 9c 7c 23 2a b1 74 4d 29 9d 33";
 const char* host_rawcontent   = "raw.githubusercontent.com";
@@ -18,8 +18,8 @@ const char* host_rawcontent   = "raw.githubusercontent.com";
 
 //https://raw.githubusercontent.com/dvismans/calendar/master/bmp/test2.bmp
 const char* path_rawcontent   = "/dvismans/calendar/master/bmp/";
-//const char* file_name   = "logo880x528-3.bmp";
-const char* file_name   = "logo200x200-pass.bmp";
+const char* file_name   = "logo880x528-3.bmp";
+//const char* file_name   = "logo200x200-pass.bmp";
 
 void downloadingMessage();
 void helloWorld();
@@ -31,6 +31,8 @@ void tryToWaitForAvailable(WiFiClient& client, int32_t amount);
 
 
 void showBitmapFrom_HTTPS(const char* host, const char* path, const char* filename, const char* fingerprint, int16_t x, int16_t y, bool with_color = true);
+//void drawBitmapFrom_HTTP_ToBuffer(const char* host, const char* path, const char* filename, int16_t x, int16_t y, bool with_color);
+//void showBitmapFrom_HTTP_Buffered(const char* host, const char* path, const char* filename, int16_t x, int16_t y, bool with_color);
 
 const char HelloWorld[] = "Hello World!";
 
@@ -65,8 +67,15 @@ void setup()
   display.init(115200);
   // first update should be full refresh
 
-  Serial.println("Running showBitmapFrom_HTTPS...");
-  showBitmapFrom_HTTPS(host_rawcontent, path_rawcontent, file_name, fp_rawcontent, 0, 0, false);
+  Serial.println("Running showBitmapFrom_HTTP_Buffered...");
+
+  int16_t x = (display.width() - 200) / 2;
+  int16_t y = (display.height() - 200) / 2;
+
+  showBitmapFrom_HTTPS(host_rawcontent, path_rawcontent, file_name, fp_rawcontent, x, y, false);
+
+  //showBitmapFrom_HTTP_Buffered(host_rawcontent, path_rawcontent, file_name, x, y, false);
+
 
   //Serial.println("Running helloWorld...");
   //helloWorld();
@@ -446,3 +455,5 @@ void tryToWaitForAvailable(WiFiClient& client, int32_t amount)
     Serial.print("waited for available "); Serial.print(millis() - start); Serial.println(" ms"); // usually 0 or 225ms
   }
 }
+
+
